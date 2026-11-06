@@ -24,7 +24,70 @@ const mapaCategorias = {
     'geral': 'Geral'
 };
 
+// ==========================================
+// ✅ NOVA FUNÇÃO: CARREGAR PUBLICIDADES
+// ==========================================
+async function carregarPublicidades() {
+    try {
+        const { data: ads, error } = await db
+            .from('ads')
+            .select('*')
+            .eq('is_active', true);
+
+        if (error) throw error;
+        if (!ads) return;
+
+        // Banner Superior
+        const topBanner = document.getElementById('top-banner');
+        const adTop = ads.find(a => a.position === 'top_banner');
+        if (adTop && topBanner) {
+            topBanner.innerHTML = `
+                <a href="${adTop.link_url}" target="_blank" title="${adTop.title || 'Publicidade'}">
+                    <img src="${adTop.image_url}" alt="${adTop.title || 'Banner'}">
+                </a>
+            `;
+        } else if (topBanner) {
+            topBanner.innerHTML = '<p style="color: #64748b;">Espaço publicitário - Anuncie aqui!</p>';
+        }
+
+        // Banner Rodapé
+        const footerBanner = document.getElementById('footer-banner');
+        const adFooter = ads.find(a => a.position === 'footer_banner');
+        if (adFooter && footerBanner) {
+            footerBanner.innerHTML = `
+                <a href="${adFooter.link_url}" target="_blank" title="${adFooter.title || 'Publicidade'}">
+                    <img src="${adFooter.image_url}" alt="${adFooter.title || 'Banner'}">
+                </a>
+            `;
+        } else if (footerBanner) {
+            footerBanner.innerHTML = '<p style="color: #64748b;">Espaço publicitário - Anuncie aqui!</p>';
+        }
+
+        // Publicidade Sidebar
+        const sidebarAd = document.getElementById('sidebar-ad');
+        const adSidebar = ads.find(a => a.position === 'sidebar');
+        if (adSidebar && sidebarAd) {
+            sidebarAd.innerHTML = `
+                <a href="${adSidebar.link_url}" target="_blank" title="${adSidebar.title || 'Publicidade'}">
+                    <img src="${adSidebar.image_url}" alt="${adSidebar.title || 'Banner'}">
+                </a>
+            `;
+        } else if (sidebarAd) {
+            sidebarAd.innerHTML = '<p>300x250<br>Publicidade</p>';
+        }
+
+    } catch (error) {
+        console.error('Erro ao carregar publicidades:', error);
+    }
+}
+
+// ==========================================
+// CARREGAR CONTEÚDO DA CATEGORIA
+// ==========================================
 async function carregarCategoria() {
+    // ✅ CHAMA OS BANNERS PRIMEIRO
+    await carregarPublicidades();
+    
     const cidadeSlug = getParameterByName('cidade');
     const tituloPagina = document.getElementById('categoria-titulo');
     const container = document.getElementById('news-container');
@@ -61,8 +124,6 @@ async function carregarCategoria() {
         } else {
             noticiasFiltradas.forEach(noticia => {
                 const dataFormatada = new Date(noticia.published_at).toLocaleDateString('pt-BR');
-                
-                // ✅ AGORA SIM: conteúdo COMPLETO, sem corte, com vídeos e imagens liberados
                 const conteudoCompleto = DOMPurify.sanitize(noticia.content, configPurify);
 
                 const card = document.createElement('div');
@@ -79,7 +140,7 @@ async function carregarCategoria() {
             });
         }
 
-        // Preenche a Sidebar (apenas a mais recente de cada cidade)
+        // Preenche a Sidebar
         function preencherSidebar(elementoHTML, slugCategoria, nomeExibicao) {
             const noticia = todasNoticias.find(n => n.category.toLowerCase().includes(nomeExibicao.toLowerCase()));
             if (noticia && elementoHTML) {

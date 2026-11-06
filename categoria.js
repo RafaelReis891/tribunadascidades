@@ -1,27 +1,17 @@
 // Configuração de segurança do DOMPurify para permitir vídeos do YouTube
 const configPurify = {
-    ADD_TAGS: ['iframe'],
-    ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling', 'src', 'width', 'height']
+    ADD_TAGS: ['iframe', 'div'],
+    ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling', 'src', 'width', 'height', 'class', 'style'],
+    ADD_URI_SAFE_ATTR: ['src']
 };
 
-// Função melhorada para pegar parâmetros da URL (suporta URLs bonitas)
+// Função para pegar parâmetros da URL
 function getParameterByName(name) {
-    // Primeiro tenta pegar da URL normal (?cidade=...)
     const url = new URL(window.location.href);
-    let param = url.searchParams.get(name);
-    
-    // Se não encontrar, tenta pegar do caminho da URL (/categoria/mogi-guacu)
-    if (!param) {
-        const pathParts = window.location.pathname.split('/');
-        const categoriaIndex = pathParts.indexOf('categoria');
-        if (categoriaIndex !== -1 && pathParts[categoriaIndex + 1]) {
-            param = pathParts[categoriaIndex + 1];
-        }
-    }
-    
-    return param;
+    return url.searchParams.get(name);
 }
 
+// Mapeia os slugs da URL para os nomes reais das categorias
 const mapaCategorias = {
     'mogi-mirim': 'Mogi Mirim',
     'mogi-guacu': 'Mogi Guaçu',
@@ -72,9 +62,8 @@ async function carregarCategoria() {
             noticiasFiltradas.forEach(noticia => {
                 const dataFormatada = new Date(noticia.published_at).toLocaleDateString('pt-BR');
                 
-                // Aplica a configuração do DOMPurify que permite iframes (YouTube)
-                const conteudoSeguro = DOMPurify.sanitize(noticia.content, configPurify);
-                const conteudoResumido = conteudoSeguro.substring(0, 250) + '...';
+                // ✅ AGORA SIM: conteúdo COMPLETO, sem corte, com vídeos e imagens liberados
+                const conteudoCompleto = DOMPurify.sanitize(noticia.content, configPurify);
 
                 const card = document.createElement('div');
                 card.className = 'news-card';
@@ -83,14 +72,14 @@ async function carregarCategoria() {
                     <h3><a href="#">${noticia.title}</a></h3>
                     <div class="meta">📅 ${dataFormatada} | ✍️ Tribuna das Cidades</div>
                     <div class="news-content">
-                        <p>${conteudoResumido}</p>
+                        ${conteudoCompleto}
                     </div>
                 `;
                 container.appendChild(card);
             });
         }
 
-        // Preenche a Sidebar
+        // Preenche a Sidebar (apenas a mais recente de cada cidade)
         function preencherSidebar(elementoHTML, slugCategoria, nomeExibicao) {
             const noticia = todasNoticias.find(n => n.category.toLowerCase().includes(nomeExibicao.toLowerCase()));
             if (noticia && elementoHTML) {
@@ -115,6 +104,5 @@ async function carregarCategoria() {
         container.innerHTML = '<p style="padding:20px; background:#fee2e2; color:#991b1b; border-radius:6px;">Erro ao carregar as notícias.</p>';
     }
 }
-
 
 document.addEventListener('DOMContentLoaded', carregarCategoria);

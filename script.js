@@ -138,12 +138,4 @@ async function carregarPublicidades() {
     }
 }
 
-// Adicione esta linha no INÍCIO da função carregarPortal:
-async function carregarPortal() {
-    // Carrega as publicidades primeiro
-    await carregarPublicidades();
-    
-    // ... resto do código existente ...
-}
-
 document.addEventListener('DOMContentLoaded', carregarPortal);

@@ -7,7 +7,7 @@ const configPurify = {
 async function carregarPortal() {
      // Carrega as publicidades primeiro
     await carregarPublicidades();
-    
+
     const containerPrincipal = document.getElementById('news-container');
     const sidebarMogi = document.getElementById('sidebar-mogi-mirim');
     const sidebarEstiva = document.getElementById('sidebar-estiva');
@@ -63,10 +63,12 @@ async function carregarPortal() {
             
             if (noticia) {
                 const dataFormatada = new Date(noticia.published_at).toLocaleDateString('pt-BR');
+                const slug = noticia.category.toLowerCase().replace(' ', '-').replace('ç', 'c').replace('ã', 'a');
+                
                 elementoHTML.innerHTML = `
                     <div class="mini-news">
                         <span class="categoria" style="font-size: 0.7rem; padding: 2px 6px; margin-bottom: 5px; display:inline-block;">${noticia.category}</span>
-                        <h5><a href="categoria.html?cidade=${noticia.category.toLowerCase().replace(' ', '-')}">${noticia.title}</a></h5>
+                        <h5><a href="/categoria/${slug}">${noticia.title}</a></h5>
                         <span class="data">📅 ${dataFormatada}</span>
                     </div>
                 `;

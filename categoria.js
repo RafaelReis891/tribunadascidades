@@ -4,9 +4,22 @@ const configPurify = {
     ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling', 'src', 'width', 'height']
 };
 
+// Função melhorada para pegar parâmetros da URL (suporta URLs bonitas)
 function getParameterByName(name) {
+    // Primeiro tenta pegar da URL normal (?cidade=...)
     const url = new URL(window.location.href);
-    return url.searchParams.get(name);
+    let param = url.searchParams.get(name);
+    
+    // Se não encontrar, tenta pegar do caminho da URL (/categoria/mogi-guacu)
+    if (!param) {
+        const pathParts = window.location.pathname.split('/');
+        const categoriaIndex = pathParts.indexOf('categoria');
+        if (categoriaIndex !== -1 && pathParts[categoriaIndex + 1]) {
+            param = pathParts[categoriaIndex + 1];
+        }
+    }
+    
+    return param;
 }
 
 const mapaCategorias = {
@@ -102,5 +115,6 @@ async function carregarCategoria() {
         container.innerHTML = '<p style="padding:20px; background:#fee2e2; color:#991b1b; border-radius:6px;">Erro ao carregar as notícias.</p>';
     }
 }
+
 
 document.addEventListener('DOMContentLoaded', carregarCategoria);

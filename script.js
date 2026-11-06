@@ -5,9 +5,6 @@ const configPurify = {
 };
 
 async function carregarPortal() {
-     // Carrega as publicidades primeiro
-    await carregarPublicidades();
-
     const containerPrincipal = document.getElementById('news-container');
     const sidebarMogi = document.getElementById('sidebar-mogi-mirim');
     const sidebarEstiva = document.getElementById('sidebar-estiva');
@@ -63,12 +60,10 @@ async function carregarPortal() {
             
             if (noticia) {
                 const dataFormatada = new Date(noticia.published_at).toLocaleDateString('pt-BR');
-                const slug = noticia.category.toLowerCase().replace(' ', '-').replace('ç', 'c').replace('ã', 'a');
-                
                 elementoHTML.innerHTML = `
                     <div class="mini-news">
                         <span class="categoria" style="font-size: 0.7rem; padding: 2px 6px; margin-bottom: 5px; display:inline-block;">${noticia.category}</span>
-                        <h5><a href="/categoria/${slug}">${noticia.title}</a></h5>
+                        <h5><a href="categoria.html?cidade=${noticia.category.toLowerCase().replace(' ', '-')}">${noticia.title}</a></h5>
                         <span class="data">📅 ${dataFormatada}</span>
                     </div>
                 `;
@@ -83,62 +78,6 @@ async function carregarPortal() {
     } catch (erro) {
         console.error('Erro ao carregar portal:', erro);
         containerPrincipal.innerHTML = '<p style="padding:20px; background:#fee2e2; color:#991b1b; border-radius:6px;">Erro ao carregar as notícias.</p>';
-    }
-}
-
-// ==========================================
-// CARREGAR PUBLICIDADES
-// ==========================================
-async function carregarPublicidades() {
-    try {
-        const { data: ads, error } = await db
-            .from('ads')
-            .select('*')
-            .eq('is_active', true);
-
-        if (error) throw error;
-
-        // Banner Superior
-        const topBanner = document.getElementById('top-banner');
-        const adTop = ads.find(a => a.position === 'top_banner');
-        if (adTop && topBanner) {
-            topBanner.innerHTML = `
-                <a href="${adTop.link_url}" target="_blank" title="${adTop.title || 'Publicidade'}">
-                    <img src="${adTop.image_url}" alt="${adTop.title || 'Banner'}">
-                </a>
-            `;
-        } else if (topBanner) {
-            topBanner.innerHTML = '<p style="color: #64748b;">Espaço publicitário - Anuncie aqui!</p>';
-        }
-
-        // Banner Rodapé
-        const footerBanner = document.getElementById('footer-banner');
-        const adFooter = ads.find(a => a.position === 'footer_banner');
-        if (adFooter && footerBanner) {
-            footerBanner.innerHTML = `
-                <a href="${adFooter.link_url}" target="_blank" title="${adFooter.title || 'Publicidade'}">
-                    <img src="${adFooter.image_url}" alt="${adFooter.title || 'Banner'}">
-                </a>
-            `;
-        } else if (footerBanner) {
-            footerBanner.innerHTML = '<p style="color: #64748b;">Espaço publicitário - Anuncie aqui!</p>';
-        }
-
-        // Publicidade Sidebar
-        const sidebarAd = document.getElementById('sidebar-ad');
-        const adSidebar = ads.find(a => a.position === 'sidebar');
-        if (adSidebar && sidebarAd) {
-            sidebarAd.innerHTML = `
-                <a href="${adSidebar.link_url}" target="_blank" title="${adSidebar.title || 'Publicidade'}">
-                    <img src="${adSidebar.image_url}" alt="${adSidebar.title || 'Banner'}">
-                </a>
-            `;
-        } else if (sidebarAd) {
-            sidebarAd.innerHTML = '<p>300x250<br>Publicidade</p>';
-        }
-
-    } catch (error) {
-        console.error('Erro ao carregar publicidades:', error);
     }
 }
 

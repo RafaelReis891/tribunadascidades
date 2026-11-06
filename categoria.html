@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categoria | Tribuna das Cidades</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Bibliotecas -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
+</head>
+<body>
+
+    <!-- CABEÇALHO (Idêntico à Home) -->
+    <header>
+        <div class="container">
+            <h1>Tribuna <span>das Cidades</span></h1>
+            <nav>
+                <a href="index.html">Início</a>
+                <a href="categoria.html?cidade=mogi-mirim">Mogi Mirim</a>
+                <a href="categoria.html?cidade=mogi-guacu">Mogi Guaçu</a>
+                <a href="categoria.html?cidade=estiva-gerbi">Estiva Gerbi</a>
+                <a href="categoria.html?cidade=itapira">Itapira</a>
+                <a href="categoria.html?cidade=politica">Política</a>
+                <a href="categoria.html?cidade=policial">Policial</a>
+                <a href="admin.html">Painel Admin</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- LAYOUT PRINCIPAL: CONTEÚDO + SIDEBAR (Idêntico à Home) -->
+    <main class="portal-layout">
+        
+        <!-- COLUNA DA ESQUERDA: Notícias da Categoria -->
+        <section class="main-content">
+            <!-- O título será preenchido automaticamente pelo categoria.js -->
+            <h2 id="categoria-titulo" style="font-family: 'Georgia', serif; font-size: 1.8rem; margin-bottom: 20px; border-left: 5px solid #dc2626; padding-left: 15px;">
+                Carregando categoria...
+            </h2>
+            
+            <div id="news-container">
+                <p style="padding: 20px; background: white; border-radius: 6px;">Carregando notícias...</p>
+            </div>
+        </section>
+
+        <!-- COLUNA DA DIREITA: Sidebar (Idêntica à Home) -->
+        <aside class="sidebar">
+            
+            <!-- Caixa de Publicidade -->
+            <div class="sidebar-box" style="text-align: center; background: #e2e8f0; min-height: 250px; display: flex; align-items: center; justify-content: center; color: #64748b; font-weight: bold; border-radius: 6px;">
+                PUBLICIDADE<br>(300x250)
+            </div>
+
+            <!-- Caixa: Mogi Mirim -->
+            <div class="sidebar-box">
+                <h4>Mogi Mirim</h4>
+                <div id="sidebar-mogi-mirim">
+                    <p style="font-size: 0.9rem; color: #6b7280;">Carregando...</p>
+                </div>
+                <a href="categoria.html?cidade=mogi-mirim" class="veja-mais">VEJA MAIS +</a>
+            </div>
+
+            <!-- Caixa: Estiva Gerbi -->
+            <div class="sidebar-box">
+                <h4>Estiva Gerbi</h4>
+                <div id="sidebar-estiva">
+                    <p style="font-size: 0.9rem; color: #6b7280;">Carregando...</p>
+                </div>
+                <a href="categoria.html?cidade=estiva-gerbi" class="veja-mais">VEJA MAIS +</a>
+            </div>
+
+        </aside>
+    </main>
+
+    <!-- RODAPÉ (Idêntico à Home) -->
+    <footer>
+        <div class="container">
+            <p class="contato">Quer anunciar com a gente? Fale conosco no WhatsApp</p>
+            <p>&copy; 2026 Tribuna das Cidades. Todos os direitos reservados.</p>
+            <p style="font-size: 0.8rem; margin-top: 15px;">Não é permitida a cópia do conteúdo deste site sem autorização.</p>
+        </div>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script src="config.js"></script>
+    <script src="categoria.js"></script>
+</body>
+</html>

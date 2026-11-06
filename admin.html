@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Nova Notícia | Tribuna das Cidades</title>
+    
+    <!-- Estilo do Quill (Editor) -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* Estilo específico do painel admin */
+        body { background-color: #f3f4f6; }
+        .admin-container { 
+            max-width: 900px; 
+            margin: 40px auto; 
+            padding: 30px; 
+            background: white; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+        }
+        .admin-header { 
+            border-bottom: 2px solid #e5e7eb; 
+            padding-bottom: 15px; 
+            margin-bottom: 25px; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .form-group { margin-bottom: 25px; }
+        .form-group label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 700; 
+            color: #0f172a;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+        .form-group input[type="text"], 
+        .form-group input[type="file"] { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid #d1d5db; 
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        .form-group input[type="text"]:focus {
+            outline: none;
+            border-color: #dc2626;
+            box-shadow: 0 0 0 3px rgba(220,38,38,0.1);
+        }
+        #thumbnail-preview {
+            margin-top: 10px;
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 6px;
+            display: none;
+        }
+        
+        /* Editor Quill */
+        #editor-container { 
+            height: 450px; 
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 0 0 6px 6px;
+        }
+        .ql-toolbar {
+            border: 1px solid #d1d5db !important;
+            border-radius: 6px 6px 0 0 !important;
+            background: #f9fafb;
+        }
+        
+        /* Faz o conteúdo do editor ficar com a mesma cara do site (WYSIWYG real) */
+        .ql-editor {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #374151;
+        }
+        .ql-editor h1 { 
+            font-family: 'Georgia', serif; 
+            font-size: 2rem; 
+            color: #0f172a; 
+            margin: 15px 0;
+            font-weight: 700;
+        }
+        .ql-editor h2 { 
+            font-family: 'Georgia', serif; 
+            font-size: 1.5rem; 
+            color: #0f172a; 
+            margin: 25px 0 15px 0;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 8px;
+        }
+        .ql-editor blockquote {
+            border-left: 4px solid #dc2626;
+            padding-left: 15px;
+            font-style: italic;
+            color: #555;
+        }
+        
+        /* Botões de ação */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .btn { 
+            padding: 14px 24px; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 1rem;
+            font-weight: 600;
+            flex: 1;
+            transition: opacity 0.2s;
+        }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-publish { background-color: #dc2626; color: white; }
+        .btn-draft { background-color: #64748b; color: white; }
+        .btn:hover:not(:disabled) { opacity: 0.9; }
+        
+        #status-msg { 
+            margin-top: 20px; 
+            padding: 15px; 
+            border-radius: 6px; 
+            text-align: center; 
+            font-weight: 600;
+            display: none;
+        }
+        #status-msg.success { background: #d1fae5; color: #065f46; display: block; }
+        #status-msg.error { background: #fee2e2; color: #991b1b; display: block; }
+        #status-msg.info { background: #dbeafe; color: #1e40af; display: block; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1>📰 Tribuna <span>das Cidades</span></h1>
+            <nav>
+                <a href="index.html">Ver Portal</a>
+                <a href="admin.html">Painel Admin</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="admin-container">
+        <div class="admin-header">
+            <h2 style="font-family: Georgia, serif; color: #0f172a;">Criar Nova Notícia</h2>
+            <a href="index.html" style="color: #dc2626; font-weight: bold;">← Voltar ao Portal</a>
+        </div>
+        
+        <!-- TÍTULO -->
+        <div class="form-group">
+            <label for="title">Título Principal</label>
+            <input type="text" id="title" placeholder="Ex: Café com Segurança fortalece comércio em Estiva Gerbi">
+        </div>
+
+        <!-- SUBTÍTULO -->
+        <div class="form-group">
+            <label for="subtitle">Subtítulo (Linha Fina)</label>
+            <input type="text" id="subtitle" placeholder="Resumo que aparece abaixo do título">
+        </div>
+
+        <!-- CATEGORIA -->
+        <div class="form-group">
+            <label for="category">Categoria / Cidade</label>
+            <input type="text" id="category" placeholder="Ex: Estiva Gerbi, Mogi Mirim, Política" list="categorias-sugestoes">
+            <datalist id="categorias-sugestoes">
+                <option value="Estiva Gerbi">
+                <option value="Mogi Mirim">
+                <option value="Mogi Guaçu">
+                <option value="Itapira">
+                <option value="Política">
+                <option value="Policial">
+                <option value="Saúde">
+                <option value="Esportes">
+                    <option value="Geral"></option>
+            </datalist>
+        </div>
+
+        <!-- IMAGEM DE DESTAQUE (Thumbnail) -->
+        <div class="form-group">
+            <label>Imagem de Destaque (Capa da Notícia)</label>
+            <input type="file" id="thumbnail-input" accept="image/png, image/jpeg, image/webp">
+            <img id="thumbnail-preview" alt="Preview da imagem">
+            <p style="font-size: 0.85rem; color: #6b7280; margin-top: 5px;">Essa imagem aparece grande no topo da matéria e nos cards da home.</p>
+        </div>
+
+        <!-- CONTEÚDO DA NOTÍCIA (EDITOR QUILL) -->
+        <div class="form-group">
+            <label>Conteúdo da Matéria</label>
+            <div id="editor-container">
+                <p>Comece a escrever sua matéria aqui...</p>
+            </div>
+            <p style="font-size: 0.85rem; color: #6b7280; margin-top: 5px;">💡 Dica: Use os botões da barra para formatar texto, inserir imagens internas, criar listas e citações.</p>
+        </div>
+
+        <!-- BOTÕES DE AÇÃO -->
+        <div class="action-buttons">
+            <button id="btn-draft" class="btn btn-draft">📝 Salvar como Rascunho</button>
+            <button id="btn-publish" class="btn btn-publish">🚀 Publicar Agora</button>
+        </div>
+        
+        <div id="status-msg"></div>
+    </main>
+
+    <!-- Bibliotecas -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    
+    <script src="config.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>

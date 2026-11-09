@@ -2,23 +2,25 @@
    1. RESET E VARIÁVEIS GLOBAIS
    ========================================= */
 :root {
-    --cor-primaria: #0f172a;      /* Azul escuro jornalístico */
-    --cor-destaque: #dc2626;      /* Vermelho para categorias/destaques */
-    --cor-fundo: #f3f4f6;         /* Cinza claro para o fundo da página */
-    --cor-card: #ffffff;          /* Branco para os cards */
-    --cor-texto: #1f2937;         /* Cinza escuro para texto */
-    --cor-texto-claro: #6b7280;   /* Cinza médio para metadados (data, autor) */
-    --fonte-titulo: 'Georgia', 'Times New Roman', serif; /* Fonte clássica de jornal */
+    --cor-primaria: #0f172a;
+    --cor-destaque: #dc2626;
+    --cor-fundo: #f3f4f6;
+    --cor-card: #ffffff;
+    --cor-texto: #1f2937;
+    --cor-texto-claro: #6b7280;
+    --fonte-titulo: 'Georgia', 'Times New Roman', serif;
     --fonte-corpo: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* ✅ AUMENTADO: base de 17px para melhor legibilidade */
 body {
     font-family: var(--fonte-corpo);
+    font-size: 17px;
     background-color: var(--cor-fundo);
     color: var(--cor-texto);
-    line-height: 1.6;
+    line-height: 1.7;
 }
 
 a { text-decoration: none; color: inherit; transition: color 0.2s; }
@@ -47,9 +49,10 @@ header .container {
     gap: 15px;
 }
 
+/* ✅ AUMENTADO: de 2.2rem para 2.5rem */
 header h1 {
     font-family: var(--fonte-titulo);
-    font-size: 2.2rem;
+    font-size: 2.5rem;
     font-weight: 900;
     letter-spacing: -1px;
     text-transform: uppercase;
@@ -67,28 +70,28 @@ nav {
     width: 100%;
 }
 
+/* ✅ AUMENTADO: de 0.95rem para 1.05rem */
 nav a {
     color: #e2e8f0;
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 1.05rem;
     text-transform: uppercase;
 }
 
 nav a:hover { color: white; text-decoration: underline; }
 
 /* =========================================
-   3. LAYOUT PRINCIPAL (GRID: CONTEÚDO + SIDEBAR)
+   3. LAYOUT PRINCIPAL
    ========================================= */
 main.portal-layout {
     display: grid;
-    grid-template-columns: 1fr 320px; /* Conteúdo principal + Sidebar fixa */
+    grid-template-columns: 1fr 320px;
     gap: 30px;
     padding: 40px 20px;
     max-width: 1200px;
     margin: 0 auto;
 }
 
-/* Responsivo: em celular, vira uma coluna só */
 @media (max-width: 768px) {
     main.portal-layout { grid-template-columns: 1fr; }
 }
@@ -112,28 +115,32 @@ main.portal-layout {
     box-shadow: 0 8px 16px rgba(0,0,0,0.1);
 }
 
+/* ✅ AUMENTADO: de 0.75rem para 0.85rem */
 .news-card .categoria {
     display: inline-block;
     background-color: var(--cor-destaque);
     color: white;
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     font-weight: 700;
-    padding: 4px 10px;
+    padding: 5px 12px;
     border-radius: 4px;
     text-transform: uppercase;
     margin-bottom: 10px;
+    letter-spacing: 0.5px;
 }
 
+/* ✅ AUMENTADO: de 1.5rem para 1.7rem */
 .news-card h3 {
     font-family: var(--fonte-titulo);
-    font-size: 1.5rem;
+    font-size: 1.7rem;
     line-height: 1.3;
     margin-bottom: 12px;
     color: var(--cor-primaria);
 }
 
+/* ✅ AUMENTADO: de 0.85rem para 0.95rem */
 .news-card .meta {
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     color: var(--cor-texto-claro);
     margin-bottom: 15px;
     display: flex;
@@ -141,10 +148,11 @@ main.portal-layout {
     gap: 10px;
 }
 
+/* ✅ AUMENTADO: de 1rem para 1.1rem — leitura mais confortável */
 .news-card .news-content {
-    font-size: 1rem;
+    font-size: 1.1rem;
     color: #374151;
-    line-height: 1.7;
+    line-height: 1.75;
 }
 
 .news-card .news-content img {
@@ -155,7 +163,7 @@ main.portal-layout {
 }
 
 /* =========================================
-   5. SIDEBAR (Lateral Direita)
+   5. SIDEBAR
    ========================================= */
 .sidebar {
     display: flex;
@@ -170,9 +178,10 @@ main.portal-layout {
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
+/* ✅ AUMENTADO: de 1.2rem para 1.3rem */
 .sidebar-box h4 {
     font-family: var(--fonte-titulo);
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     color: var(--cor-primaria);
     border-bottom: 2px solid var(--cor-destaque);
     padding-bottom: 8px;
@@ -188,24 +197,27 @@ main.portal-layout {
 
 .sidebar-box .mini-news:last-child { border-bottom: none; }
 
+/* ✅ AUMENTADO: de 0.95rem para 1.05rem */
 .sidebar-box .mini-news h5 {
-    font-size: 0.95rem;
+    font-size: 1.05rem;
     font-weight: 600;
     margin-bottom: 5px;
     line-height: 1.4;
 }
 
+/* ✅ AUMENTADO: de 0.8rem para 0.9rem */
 .sidebar-box .mini-news .data {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     color: var(--cor-texto-claro);
 }
 
+/* ✅ AUMENTADO: de 0.85rem para 0.95rem */
 .veja-mais {
     display: block;
     text-align: right;
     color: var(--cor-destaque);
     font-weight: 700;
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     margin-top: 10px;
 }
 
@@ -221,8 +233,9 @@ footer {
     border-top: 4px solid var(--cor-destaque);
 }
 
-footer p { margin-bottom: 10px; font-size: 0.9rem; }
-footer .contato { color: white; font-weight: bold; font-size: 1.1rem; }
+/* ✅ AUMENTADO: de 0.9rem para 1rem */
+footer p { margin-bottom: 10px; font-size: 1rem; }
+footer .contato { color: white; font-weight: bold; font-size: 1.2rem; }
 
 
 /* Forçar exibição correta de vídeos do YouTube (Quill) */
@@ -237,7 +250,6 @@ footer .contato { color: white; font-weight: bold; font-size: 1.1rem; }
     display: block;
 }
 
-/* Ajuste para celulares */
 @media (max-width: 768px) {
     .news-content iframe,
     .news-content .ql-video {
@@ -246,7 +258,7 @@ footer .contato { color: white; font-weight: bold; font-size: 1.1rem; }
 }
 
 /* =========================================
-   BANNERS HORIZONTAIS (SUPERIOR E RODAPÉ)
+   BANNERS HORIZONTAIS
    ========================================= */
 .banner-horizontal {
     width: 100%;
@@ -295,7 +307,6 @@ footer .contato { color: white; font-weight: bold; font-size: 1.1rem; }
     margin: 0 auto;
 }
 
-/* Responsivo */
 @media (max-width: 768px) {
     .banner-horizontal img {
         max-height: 80px;
@@ -310,16 +321,15 @@ footer .contato { color: white; font-weight: bold; font-size: 1.1rem; }
    OTIMIZAÇÕES PARA DISPOSITIVOS MÓVEIS
    ========================================= */
 
-/* Telas pequenas (celulares em retrato) */
+/* ✅ CORREÇÃO IMPORTANTE: em mobile NÃO reduzimos para 14px.
+   Mantemos 16px (padrão do navegador) para não forçar zoom. */
 @media (max-width: 768px) {
     
-    /* Ajuste geral do corpo */
     body {
-        font-size: 14px;
-        line-height: 1.5;
+        font-size: 16px;
+        line-height: 1.6;
     }
     
-    /* Cabeçalho mais compacto */
     header {
         padding: 10px 0;
     }
@@ -328,73 +338,73 @@ footer .contato { color: white; font-weight: bold; font-size: 1.1rem; }
         gap: 10px;
     }
     
+    /* ✅ AUMENTADO: de 1.5rem para 1.7rem */
     header h1 {
-        font-size: 1.5rem;
+        font-size: 1.7rem;
         letter-spacing: -0.5px;
     }
     
-    /* Menu de navegação mais legível */
     nav {
         gap: 12px;
         padding-top: 10px;
     }
     
+    /* ✅ AUMENTADO: de 0.85rem para 0.95rem */
     nav a {
-        font-size: 0.85rem;
+        font-size: 0.95rem;
         font-weight: 600;
     }
     
-    /* Layout principal sem padding lateral excessivo */
     main.portal-layout {
         padding: 20px 15px;
         gap: 20px;
     }
     
-    /* Títulos das seções */
     .main-content h2 {
-        font-size: 1.3rem !important;
+        font-size: 1.4rem !important;
         margin-bottom: 15px !important;
         border-left-width: 3px !important;
         padding-left: 10px !important;
     }
     
-    /* Cards de notícias mais compactos */
     .news-card {
-        padding: 15px;
+        padding: 18px;
         margin-bottom: 20px;
     }
     
+    /* ✅ AUMENTADO: de 0.7rem para 0.8rem */
     .news-card .categoria {
-        font-size: 0.7rem;
-        padding: 3px 8px;
+        font-size: 0.8rem;
+        padding: 4px 10px;
         margin-bottom: 8px;
     }
     
+    /* ✅ AUMENTADO: de 1.2rem para 1.35rem */
     .news-card h3 {
-        font-size: 1.2rem;
+        font-size: 1.35rem;
         line-height: 1.3;
         margin-bottom: 10px;
     }
     
+    /* ✅ AUMENTADO: de 0.75rem para 0.85rem */
     .news-card .meta {
-        font-size: 0.75rem;
+        font-size: 0.85rem;
         margin-bottom: 12px;
         flex-direction: column;
         align-items: flex-start;
         gap: 5px;
     }
     
+    /* ✅ AUMENTADO: de 0.95rem para 1rem */
     .news-card .news-content {
-        font-size: 0.95rem;
-        line-height: 1.6;
+        font-size: 1rem;
+        line-height: 1.7;
     }
     
-    /* Imagens dentro do conteúdo */
     .news-card .news-content img {
         margin: 10px 0;
     }
     
-    /* Sidebar */
     .sidebar {
         gap: 20px;
     }
@@ -403,26 +413,29 @@ footer .contato { color: white; font-weight: bold; font-size: 1.1rem; }
         padding: 15px;
     }
     
+    /* ✅ AUMENTADO: de 1.1rem para 1.2rem */
     .sidebar-box h4 {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         padding-bottom: 6px;
         margin-bottom: 12px;
     }
     
+    /* ✅ AUMENTADO: de 0.9rem para 1rem */
     .sidebar-box .mini-news h5 {
-        font-size: 0.9rem;
+        font-size: 1rem;
         margin-bottom: 4px;
     }
     
+    /* ✅ AUMENTADO: de 0.75rem para 0.85rem */
     .sidebar-box .mini-news .data {
-        font-size: 0.75rem;
+        font-size: 0.85rem;
     }
     
+    /* ✅ AUMENTADO: de 0.8rem para 0.9rem */
     .veja-mais {
-        font-size: 0.8rem;
+        font-size: 0.9rem;
     }
     
-    /* Banners horizontais */
     .banner-horizontal {
         min-height: 80px;
         padding: 8px 0;
@@ -433,10 +446,9 @@ footer .contato { color: white; font-weight: bold; font-size: 1.1rem; }
     }
     
     .banner-horizontal p {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
     }
     
-    /* Publicidade sidebar */
     .ad-sidebar {
         min-height: 200px;
     }
@@ -446,38 +458,39 @@ footer .contato { color: white; font-weight: bold; font-size: 1.1rem; }
     }
     
     .ad-sidebar p {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
     }
     
-    /* Rodapé */
     footer {
         padding: 25px 15px;
         margin-top: 40px;
     }
     
+    /* ✅ AUMENTADO: de 0.8rem para 0.9rem */
     footer p {
-        font-size: 0.8rem;
+        font-size: 0.9rem;
         margin-bottom: 8px;
     }
     
+    /* ✅ AUMENTADO: de 1rem para 1.1rem */
     footer .contato {
-        font-size: 1rem;
+        font-size: 1.1rem;
     }
 }
 
-/* Telas muito pequenas (celulares antigos ou em paisagem pequena) */
+/* ✅ CORREÇÃO: em telas muito pequenas também não reduzimos abaixo de 15px */
 @media (max-width: 480px) {
     
     body {
-        font-size: 13px;
+        font-size: 15px;
     }
     
     header h1 {
-        font-size: 1.3rem;
+        font-size: 1.5rem;
     }
     
     nav a {
-        font-size: 0.8rem;
+        font-size: 0.9rem;
     }
     
     main.portal-layout {
@@ -485,23 +498,25 @@ footer .contato { color: white; font-weight: bold; font-size: 1.1rem; }
     }
     
     .main-content h2 {
-        font-size: 1.1rem !important;
+        font-size: 1.25rem !important;
     }
     
     .news-card {
-        padding: 12px;
+        padding: 14px;
     }
     
+    /* ✅ AUMENTADO: de 1.1rem para 1.2rem */
     .news-card h3 {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
     }
     
+    /* ✅ AUMENTADO: de 0.9rem para 0.95rem */
     .news-card .news-content {
-        font-size: 0.9rem;
+        font-size: 0.95rem;
     }
     
     .sidebar-box h4 {
-        font-size: 1rem;
+        font-size: 1.1rem;
     }
     
     .banner-horizontal {
@@ -516,8 +531,6 @@ footer .contato { color: white; font-weight: bold; font-size: 1.1rem; }
 /* =========================================
    MELHORIAS GERAIS DE TIPOGRAFIA
    ========================================= */
-
-/* Garante que textos longos quebrem corretamente */
 .news-card h3,
 .news-card .news-content p,
 .sidebar-box .mini-news h5 {
@@ -525,13 +538,11 @@ footer .contato { color: white; font-weight: bold; font-size: 1.1rem; }
     overflow-wrap: break-word;
 }
 
-/* Melhora a legibilidade de links em mobile */
 @media (max-width: 768px) {
     a {
         -webkit-tap-highlight-color: rgba(220, 38, 38, 0.1);
     }
     
-    /* Aumenta a área de toque dos links */
     .news-card h3 a,
     .sidebar-box .mini-news h5 a,
     .veja-mais {
@@ -541,25 +552,24 @@ footer .contato { color: white; font-weight: bold; font-size: 1.1rem; }
 }
 
 /* =========================================
-   AJUSTES PARA CONTEÚDO FORMATADO (HTML DO QUILL)
+   CONTEÚDO FORMATADO (HTML DO QUILL)
    ========================================= */
-
-/* Reduz tamanhos excessivos de títulos dentro do conteúdo da notícia em mobile */
 @media (max-width: 768px) {
     .news-content h1 {
-        font-size: 1.5rem !important;
+        font-size: 1.6rem !important;
     }
     
     .news-content h2 {
-        font-size: 1.3rem !important;
+        font-size: 1.4rem !important;
     }
     
     .news-content h3 {
-        font-size: 1.1rem !important;
+        font-size: 1.2rem !important;
     }
     
+    /* ✅ AUMENTADO: de 0.95rem para 1rem */
     .news-content p {
-        font-size: 0.95rem !important;
+        font-size: 1rem !important;
         margin-bottom: 12px !important;
     }
     
@@ -567,14 +577,16 @@ footer .contato { color: white; font-weight: bold; font-size: 1.1rem; }
         margin: 15px 0 15px 20px !important;
     }
     
+    /* ✅ AUMENTADO: de 0.9rem para 0.95rem */
     .news-content li {
-        font-size: 0.9rem !important;
+        font-size: 0.95rem !important;
         margin-bottom: 6px !important;
     }
     
+    /* ✅ AUMENTADO: de 1.05rem para 1.1rem */
     .news-content blockquote {
         padding: 15px 20px !important;
-        font-size: 1.05rem !important;
+        font-size: 1.1rem !important;
         margin: 20px 0 !important;
     }
 }

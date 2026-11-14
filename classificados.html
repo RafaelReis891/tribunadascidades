@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classificados | Tribuna das Cidades</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <header><div class="container">
+        <h1>Tribuna <span>das Cidades</span></h1>
+        <nav><a href="index.html">Início</a><a href="classificados-cliente.html">Área do anunciante</a></nav>
+        <nav class="secondary-nav" aria-label="Classificados">
+            <a href="classificados.html?categoria=imoveis">Imóveis</a>
+            <a href="classificados.html?categoria=carros-eletricos">Carros Elétricos</a>
+            <a href="classificados.html?categoria=motos-eletricas">Motos Elétricas</a>
+            <a href="classificados.html?categoria=comercios">Comércios</a>
+        </nav>
+    </div></header>
+    <main class="classifieds-layout">
+        <h2 id="classifieds-title">Classificados</h2>
+        <div class="classifieds-controls">
+            <div class="classified-advertiser-filter">
+                <label for="advertiser-filter">Anunciante</label>
+                <select id="advertiser-filter"><option value="all">Todos os anunciantes</option></select>
+            </div>
+            <div id="real-estate-filters" class="real-estate-filters" hidden>
+                <label>Cidade<select id="city-filter"><option value="all">Todas</option></select></label>
+                <label>Bairro<select id="neighborhood-filter"><option value="all">Todos</option></select></label>
+                <label>Tipo de imóvel<select id="property-type-filter"><option value="all">Todos</option></select></label>
+                <label>Preço mínimo (R$)<input id="price-min-filter" type="number" min="0" step="0.01"></label>
+                <label>Preço máximo (R$)<input id="price-max-filter" type="number" min="0" step="0.01"></label>
+                <label>Quartos<select id="bedrooms-filter"><option value="all">Qualquer</option><option value="1">1+</option><option value="2">2+</option><option value="3">3+</option><option value="4">4+</option></select></label>
+                <label>Vagas de garagem<select id="parking-filter"><option value="all">Qualquer</option><option value="1">1+</option><option value="2">2+</option><option value="3">3+</option></select></label>
+                <label>Ordenar por<select id="sort-filter"><option value="newest">Mais recentes</option><option value="price-asc">Menor preço</option><option value="price-desc">Maior preço</option></select></label>
+            </div>
+            <div id="commerce-filters" class="commerce-filters" hidden>
+                <label class="commerce-search">Buscar produto<input id="commerce-search" type="search" placeholder="Ex.: café, almoço, promoção"></label>
+                <label>Categoria<select id="commerce-category-filter"><option value="all">Todas as categorias</option></select></label>
+                <label>Cidade<select id="commerce-city-filter"><option value="all">Todas as cidades</option></select></label>
+                <label>Bairro<select id="commerce-neighborhood-filter"><option value="all">Todos os bairros</option></select></label>
+                <label>Preço mínimo<input id="commerce-price-min" type="number" min="0" step="0.01" placeholder="R$"></label>
+                <label>Preço máximo<input id="commerce-price-max" type="number" min="0" step="0.01" placeholder="R$"></label>
+                <label>Ordenar<select id="commerce-sort"><option value="newest">Mais recentes</option><option value="price-asc">Menor preço</option><option value="price-desc">Maior preço</option><option value="offer">Ofertas primeiro</option></select></label>
+            </div>
+            <p id="classified-results-count" class="classified-results-count" aria-live="polite"></p>
+        </div>
+        <nav id="commerce-category-chips" class="commerce-category-chips" aria-label="Categorias de comércio" hidden></nav>
+        <div id="classifieds-container" class="classifieds-grid"><p>Carregando anúncios...</p></div>
+    </main>
+    <footer><div class="container"><p>&copy; 2026 Tribuna das Cidades. Todos os direitos reservados.</p></div></footer>
+    <script src="config.js"></script>
+    <script src="classificados.js"></script>
+</body>
+</html>

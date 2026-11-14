@@ -1,169 +1,134 @@
-// Configuração de segurança do DOMPurify para permitir vídeos do YouTube
-const configPurify = {
-    ADD_TAGS: ['iframe', 'div'],
-    ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling', 'src', 'width', 'height', 'class', 'style'],
-    ADD_URI_SAFE_ATTR: ['src']
-};
-
-// Função para pegar parâmetros da URL
-function getParameterByName(name) {
-    const url = new URL(window.location.href);
-    return url.searchParams.get(name);
-}
-
-// Mapeia os slugs da URL para os nomes reais das categorias
+const TAMANHO_PAGINA = 10;
+const CAMPOS_LISTAGEM = 'id,title,category,published_at';
 const mapaCategorias = {
-    'mogi-mirim': 'Mogi Mirim',
-    'mogi-guacu': 'Mogi Guaçu',
-    'estiva-gerbi': 'Estiva Gerbi',
-    'itapira': 'Itapira',
-    'politica': 'Política',
-    'policial': 'Policial',
-    'saude': 'Saúde',
-    'esportes': 'Esportes',
-    'geral': 'Geral'
+    'mogi-mirim': 'Mogi Mirim', 'mogi-guacu': 'Mogi Guaçu',
+    'estiva-gerbi': 'Estiva Gerbi', itapira: 'Itapira',
+    politica: 'Política', policial: 'Policial', saude: 'Saúde',
+    esportes: 'Esportes', geral: 'Geral'
 };
 
-// ==========================================
-// ✅ NOVA FUNÇÃO: CARREGAR PUBLICIDADES
-// ==========================================
-async function carregarPublicidades() {
-    try {
-        const { data: ads, error } = await db
-            .from('ads')
-            .select('*')
-            .eq('is_active', true);
-
-        if (error) throw error;
-        if (!ads) return;
-
-        // Banner Superior
-        const topBanner = document.getElementById('top-banner');
-        const adTop = ads.find(a => a.position === 'top_banner');
-        if (adTop && topBanner) {
-            topBanner.innerHTML = `
-                <a href="${adTop.link_url}" target="_blank" title="${adTop.title || 'Publicidade'}">
-                    <img src="${adTop.image_url}" alt="${adTop.title || 'Banner'}">
-                </a>
-            `;
-        } else if (topBanner) {
-            topBanner.innerHTML = '<p style="color: #64748b;">Espaço publicitário - Anuncie aqui!</p>';
-        }
-
-        // Banner Rodapé
-        const footerBanner = document.getElementById('footer-banner');
-        const adFooter = ads.find(a => a.position === 'footer_banner');
-        if (adFooter && footerBanner) {
-            footerBanner.innerHTML = `
-                <a href="${adFooter.link_url}" target="_blank" title="${adFooter.title || 'Publicidade'}">
-                    <img src="${adFooter.image_url}" alt="${adFooter.title || 'Banner'}">
-                </a>
-            `;
-        } else if (footerBanner) {
-            footerBanner.innerHTML = '<p style="color: #64748b;">Espaço publicitário - Anuncie aqui!</p>';
-        }
-
-        // Publicidade Sidebar
-        const sidebarAd = document.getElementById('sidebar-ad');
-        const adSidebar = ads.find(a => a.position === 'sidebar');
-        if (adSidebar && sidebarAd) {
-            sidebarAd.innerHTML = `
-                <a href="${adSidebar.link_url}" target="_blank" title="${adSidebar.title || 'Publicidade'}">
-                    <img src="${adSidebar.image_url}" alt="${adSidebar.title || 'Banner'}">
-                </a>
-            `;
-        } else if (sidebarAd) {
-            sidebarAd.innerHTML = '<p>300x250<br>Publicidade</p>';
-        }
-
-    } catch (error) {
-        console.error('Erro ao carregar publicidades:', error);
-    }
+function montarCard(noticia) {
+    const card = document.createElement('article');
+    card.className = 'news-card';
+    const categoria = document.createElement('span');
+    categoria.className = 'categoria';
+    categoria.textContent = noticia.category || 'Notícia';
+    const titulo = document.createElement('h3');
+    const link = document.createElement('a');
+    link.href = `noticia.html?id=${encodeURIComponent(noticia.id)}`;
+    link.textContent = noticia.title || 'Notícia sem título';
+    titulo.appendChild(link);
+    const meta = document.createElement('div');
+    meta.className = 'meta';
+    meta.textContent = `📅 ${new Date(noticia.published_at).toLocaleDateString('pt-BR')} | ✍️ Tribuna das Cidades`;
+    const chamada = document.createElement('p');
+    chamada.className = 'news-teaser';
+    chamada.textContent = 'Leia a matéria completa';
+    card.append(categoria, titulo, meta, chamada);
+    return card;
 }
 
-// ==========================================
-// CARREGAR CONTEÚDO DA CATEGORIA
-// ==========================================
-async function carregarCategoria() {
-    // ✅ CHAMA OS BANNERS PRIMEIRO
-    await carregarPublicidades();
-    
-    const cidadeSlug = getParameterByName('cidade');
-    const tituloPagina = document.getElementById('categoria-titulo');
-    const container = document.getElementById('news-container');
-    const sidebarMogi = document.getElementById('sidebar-mogi-mirim');
-    const sidebarEstiva = document.getElementById('sidebar-estiva');
+async function buscarMaisRecente(nome) {
+    const { data, error } = await db.from('articles').select(CAMPOS_LISTAGEM)
+        .eq('status', 'Publicado').ilike('category', `%${nome}%`)
+        .order('published_at', { ascending: false }).limit(1);
+    if (error) throw error;
+    return data?.[0];
+}
 
-    if (!cidadeSlug || !mapaCategorias[cidadeSlug]) {
-        tituloPagina.textContent = 'Categoria não encontrada';
-        container.innerHTML = '<p style="padding:20px; background:white; border-radius:6px;">A categoria que você procurou não existe.</p>';
+async function carregarPublicidades() {
+    const { data, error } = await db.from('ads')
+        .select('position,image_url,link_url,title').eq('is_active', true);
+    if (error) throw error;
+    const slots = [
+        ['top-banner', 'top_banner', 'Espaço publicitário - Anuncie aqui!'],
+        ['footer-banner', 'footer_banner', 'Espaço publicitário - Anuncie aqui!'],
+        ['sidebar-ad', 'sidebar', '300x250 - Publicidade']
+    ];
+    slots.forEach(([id, position, fallback]) => {
+        const alvo = document.getElementById(id);
+        if (!alvo) return;
+        const ad = data?.find(item => item.position === position);
+        alvo.replaceChildren();
+        if (!ad) { alvo.textContent = fallback; return; }
+        const link = document.createElement('a');
+        link.href = ad.link_url || '#';
+        if (ad.link_url && ad.link_url !== '#') { link.target = '_blank'; link.rel = 'noopener noreferrer'; }
+        const img = document.createElement('img');
+        img.src = ad.image_url; img.alt = ad.title || 'Publicidade'; img.loading = 'lazy';
+        link.appendChild(img); alvo.appendChild(link);
+    });
+}
+
+function preencherMini(id, noticia) {
+    const alvo = document.getElementById(id);
+    if (!alvo) return;
+    alvo.replaceChildren();
+    if (!noticia) { alvo.textContent = 'Nenhuma notícia recente.'; return; }
+    const box = document.createElement('div'); box.className = 'mini-news';
+    const titulo = document.createElement('h5');
+    const link = document.createElement('a');
+    link.href = `noticia.html?id=${encodeURIComponent(noticia.id)}`;
+    link.textContent = noticia.title || 'Notícia'; titulo.appendChild(link);
+    const data = document.createElement('span'); data.className = 'data';
+    data.textContent = `📅 ${new Date(noticia.published_at).toLocaleDateString('pt-BR')}`;
+    box.append(titulo, data); alvo.appendChild(box);
+}
+
+async function carregarCategoria() {
+    const slug = new URL(location.href).searchParams.get('cidade');
+    const nome = mapaCategorias[slug];
+    const titulo = document.getElementById('categoria-titulo');
+    const container = document.getElementById('news-container');
+    if (!nome) {
+        titulo.textContent = 'Categoria não encontrada';
+        container.textContent = 'A categoria que você procurou não existe.';
         return;
     }
+    titulo.textContent = nome;
+    document.title = `${nome} | Tribuna das Cidades`;
+    let inicio = 0;
+    let carregando = false;
+    let botaoMais;
 
-    const nomeCategoria = mapaCategorias[cidadeSlug];
-    tituloPagina.textContent = nomeCategoria;
-    document.title = `${nomeCategoria} | Tribuna das Cidades`;
+    async function carregarLote() {
+        if (carregando) return;
+        carregando = true;
+        if (botaoMais) { botaoMais.disabled = true; botaoMais.textContent = 'Carregando...'; }
+        try {
+            const fim = inicio + TAMANHO_PAGINA - 1;
+            const { data, error } = await db.from('articles').select(CAMPOS_LISTAGEM)
+                .eq('status', 'Publicado').ilike('category', `%${nome}%`)
+                .order('published_at', { ascending: false }).range(inicio, fim);
+            if (error) throw error;
+            if (inicio === 0) container.replaceChildren();
+            if (!data?.length && inicio === 0) container.textContent = `Nenhuma notícia publicada em ${nome} ainda.`;
+            data?.forEach(item => container.insertBefore(montarCard(item), botaoMais));
+            inicio += data?.length || 0;
+            if (data?.length === TAMANHO_PAGINA) {
+                if (!botaoMais) {
+                    botaoMais = document.createElement('button');
+                    botaoMais.className = 'load-more';
+                    botaoMais.addEventListener('click', carregarLote);
+                    container.appendChild(botaoMais);
+                }
+                botaoMais.disabled = false; botaoMais.textContent = 'Carregar mais notícias';
+            } else if (botaoMais) { botaoMais.remove(); botaoMais = null; }
+        } catch (error) {
+            console.error('Erro ao carregar notícias:', error);
+            if (inicio === 0) container.textContent = 'Erro ao carregar as notícias.';
+            else if (botaoMais) { botaoMais.disabled = false; botaoMais.textContent = 'Tentar novamente'; }
+        } finally { carregando = false; }
+    }
 
     try {
-        const { data: todasNoticias, error } = await db
-            .from('articles')
-            .select('*')
-            .eq('status', 'Publicado')
-            .order('published_at', { ascending: false });
-
-        if (error) throw error;
-
-        const noticiasFiltradas = todasNoticias.filter(n => 
-            n.category.toLowerCase().includes(nomeCategoria.toLowerCase())
-        );
-
-        container.innerHTML = '';
-
-        if (!noticiasFiltradas || noticiasFiltradas.length === 0) {
-            container.innerHTML = `<p style="padding:20px; background:white; border-radius:6px;">Nenhuma notícia publicada em ${nomeCategoria} ainda.</p>`;
-        } else {
-            noticiasFiltradas.forEach(noticia => {
-                const dataFormatada = new Date(noticia.published_at).toLocaleDateString('pt-BR');
-                const conteudoCompleto = DOMPurify.sanitize(noticia.content, configPurify);
-
-                const card = document.createElement('div');
-                card.className = 'news-card';
-                card.innerHTML = `
-                    <span class="categoria">${noticia.category}</span>
-                    <h3><a href="#">${noticia.title}</a></h3>
-                    <div class="meta">📅 ${dataFormatada} | ✍️ Tribuna das Cidades</div>
-                    <div class="news-content">
-                        ${conteudoCompleto}
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        // Preenche a Sidebar
-        function preencherSidebar(elementoHTML, slugCategoria, nomeExibicao) {
-            const noticia = todasNoticias.find(n => n.category.toLowerCase().includes(nomeExibicao.toLowerCase()));
-            if (noticia && elementoHTML) {
-                const dataFormatada = new Date(noticia.published_at).toLocaleDateString('pt-BR');
-                elementoHTML.innerHTML = `
-                    <div class="mini-news">
-                        <span class="categoria" style="font-size: 0.7rem; padding: 2px 6px; margin-bottom: 5px; display:inline-block;">${noticia.category}</span>
-                        <h5><a href="categoria.html?cidade=${slugCategoria}">${noticia.title}</a></h5>
-                        <span class="data">📅 ${dataFormatada}</span>
-                    </div>
-                `;
-            } else if (elementoHTML) {
-                elementoHTML.innerHTML = '<p style="font-size:0.9rem; color:#6b7280; font-style:italic;">Nenhuma notícia recente.</p>';
-            }
-        }
-
-        preencherSidebar(sidebarMogi, 'mogi-mirim', 'Mogi Mirim');
-        preencherSidebar(sidebarEstiva, 'estiva-gerbi', 'Estiva Gerbi');
-
-    } catch (erro) {
-        console.error('Erro ao carregar categoria:', erro);
-        container.innerHTML = '<p style="padding:20px; background:#fee2e2; color:#991b1b; border-radius:6px;">Erro ao carregar as notícias.</p>';
-    }
+        await Promise.all([
+            carregarPublicidades(),
+            carregarLote(),
+            buscarMaisRecente('Mogi Mirim').then(n => preencherMini('sidebar-mogi-mirim', n)),
+            buscarMaisRecente('Estiva Gerbi').then(n => preencherMini('sidebar-estiva', n))
+        ]);
+    } catch (error) { console.error('Erro ao carregar a página:', error); }
 }
 
 document.addEventListener('DOMContentLoaded', carregarCategoria);

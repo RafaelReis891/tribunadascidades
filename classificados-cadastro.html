@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso do anunciante | Tribuna das Cidades</title><link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <header><div class="container"><h1>Tribuna <span>das Cidades</span></h1><nav><a href="index.html">Início</a><a href="classificados.html?categoria=imoveis">Classificados</a></nav></div></header>
+    <main class="classified-form-page">
+        <section class="classified-panel">
+            <h2>Acesso do anunciante</h2>
+            <p>Entre na sua conta ou solicite acesso. Os anúncios só ficam disponíveis depois que a Tribuna liberar suas vagas e o prazo contratado.</p>
+            <form id="login-form" class="classified-form">
+                <h3>Entrar</h3>
+                <label>E-mail<input id="login-email" type="email" autocomplete="email" required></label>
+                <label>Senha<input id="login-password" type="password" autocomplete="current-password" required></label>
+                <button class="btn btn-primary" type="submit">Entrar no painel</button>
+            </form>
+            <form id="signup-form" class="classified-form">
+                <h3>Solicitar cadastro</h3>
+                <label>Nome da empresa ou anunciante<input id="signup-business" type="text" required maxlength="120"></label>
+                <label>E-mail<input id="signup-email" type="email" autocomplete="email" required></label>
+                <label>Senha (mínimo de 8 caracteres)<input id="signup-password" type="password" autocomplete="new-password" minlength="8" required></label>
+                <button class="btn btn-success" type="submit">Criar conta e solicitar acesso</button>
+            </form>
+            <div id="auth-message" class="classified-message" aria-live="polite"></div>
+        </section>
+    </main>
+    <script src="config.js"></script><script src="classificados-cadastro.js"></script>
+</body></html>

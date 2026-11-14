@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin de classificados | Tribuna das Cidades</title><link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <header><div class="container"><h1>Tribuna <span>das Cidades</span></h1><nav><a href="index.html">Portal</a><a href="classificados.html?categoria=imoveis">Classificados</a><a href="classificados-cliente.html">Área do anunciante</a></nav></div></header>
+    <main class="classified-form-page">
+        <section id="admin-login-panel" class="classified-panel">
+            <h2>Painel geral de classificados</h2>
+            <form id="admin-login-form" class="classified-form">
+                <label>E-mail<input id="admin-email" type="email" autocomplete="username" required></label>
+                <label>Senha<input id="admin-password" type="password" autocomplete="current-password" required></label>
+                <button class="btn btn-primary" type="submit">Entrar como administrador</button>
+            </form>
+            <div id="admin-login-message" class="classified-message" aria-live="polite"></div>
+        </section>
+        <section id="admin-dashboard" class="classified-panel" hidden>
+            <div class="classified-dashboard-header"><div><h2>Clientes e contratos</h2><p>Libere as contas, defina vagas por categoria e configure a validade.</p></div><button id="admin-logout" class="btn btn-secondary">Sair</button></div>
+            <div id="admin-message" class="classified-message" aria-live="polite"></div>
+            <div id="admin-clients-list" class="admin-clients-list">Carregando clientes...</div>
+        </section>
+    </main>
+    <script src="config.js"></script><script src="classificados-admin.js"></script>
+</body></html>

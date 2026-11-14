@@ -122,9 +122,7 @@ async function carregarClassificados() {
     commerceFilters.hidden = slug !== 'comercios';
     commerceChips.hidden = slug !== 'comercios';
     document.getElementById('classifieds-container').classList.toggle('commerce-grid', slug === 'comercios');
-    const { data, error } = await db.from('classified_ads')
-        .select('id,client_id,title,description,price,price_amount,original_price,offer_ends_at,product_category,location,city,neighborhood,property_type,bedrooms,parking_spaces,whatsapp,image_url,image_urls,created_at,advertiser_name,advertiser_logo_url')
-        .eq('category', slug).eq('status', 'published')
+    const { data, error } = await db.rpc('classified_public_ads', { p_category: slug })
         .order('created_at', { ascending: false }).limit(1000);
     container.replaceChildren();
     if (error) { console.error(error); container.textContent = 'Não foi possível carregar os anúncios.'; filterControl.hidden = true; return; }

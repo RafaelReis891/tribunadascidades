@@ -2,26 +2,42 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin de classificados | Tribuna das Cidades</title><link rel="stylesheet" href="style.css">
+    <title>Admin de classificados | Tribuna das Cidades</title><link rel="stylesheet" href="assets/css/site.css"><link rel="stylesheet" href="assets/css/admin.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body>
-    <header><div class="container"><h1>Tribuna <span>das Cidades</span></h1><nav><a href="index.html">Portal</a><a href="classificados.html?categoria=imoveis">Classificados</a><a href="classificados-cliente.html">Área do anunciante</a></nav></div></header>
+<body class="classified-admin-page">
+    <header class="admin-topbar"><div class="admin-topbar-inner">
+        <a class="admin-brand" href="index.html"><span class="admin-brand-mark">T</span><span><strong>Tribuna</strong><small>das Cidades · Administração</small></span></a>
+        <nav aria-label="Navegação administrativa"><a href="admin.html">Notícias</a><a href="ads.html">Publicidade</a><a href="classificados-admin.html" aria-current="page">Classificados</a></nav>
+    </div></header>
     <main class="classified-form-page">
-        <section id="admin-login-panel" class="classified-panel">
-            <h2>Painel geral de classificados</h2>
-            <form id="admin-login-form" class="classified-form">
-                <label>E-mail<input id="admin-email" type="email" autocomplete="username" required></label>
-                <label>Senha<input id="admin-password" type="password" autocomplete="current-password" required></label>
-                <button class="btn btn-primary" type="submit">Entrar como administrador</button>
+        <section id="admin-login-panel" class="classified-panel admin-login-surface">
+            <p class="admin-eyebrow">GESTÃO DE ANUNCIANTES</p><h1>Painel de classificados</h1>
+            <p>Acesse para administrar clientes, prazos e vagas de anúncios.</p>
+            <form id="admin-login-form" class="classified-form admin-login-form">
+                <label>E-mail<input id="admin-email" type="email" autocomplete="username" placeholder="voce@exemplo.com" required></label>
+                <label>Senha<input id="admin-password" type="password" autocomplete="current-password" placeholder="Sua senha" required></label>
+                <button class="btn btn-primary" type="submit">Entrar no painel <span>→</span></button>
             </form>
             <div id="admin-login-message" class="classified-message" aria-live="polite"></div>
         </section>
-        <section id="admin-dashboard" class="classified-panel" hidden>
-            <div class="classified-dashboard-header"><div><h2>Clientes e contratos</h2><p>Libere as contas, defina vagas por categoria e configure a validade.</p></div><button id="admin-logout" class="btn btn-secondary">Sair</button></div>
+        <section id="admin-dashboard" class="classified-panel admin-dashboard-surface" hidden>
+            <div class="admin-dashboard-heading"><div><p class="admin-eyebrow">VISÃO GERAL</p><h1>Clientes e contratos</h1><p>Gerencie acessos, prazos e vagas de anúncios.</p></div><button id="admin-logout" class="btn btn-secondary" type="button">Sair</button></div>
             <div id="admin-message" class="classified-message" aria-live="polite"></div>
+            <div class="admin-summary-grid" aria-label="Resumo de clientes">
+                <article><span>Total de clientes</span><strong id="admin-total-count">—</strong></article>
+                <article><span>Aguardando liberação</span><strong id="admin-pending-count">—</strong></article>
+                <article><span>Contratos vigentes</span><strong id="admin-active-count">—</strong></article>
+                <article><span>Contratos vencidos</span><strong id="admin-expired-count">—</strong></article>
+                <article><span>Contas suspensas</span><strong id="admin-suspended-count">—</strong></article>
+            </div>
+            <div class="admin-list-toolbar">
+                <label class="admin-search-field">Buscar cliente<input id="admin-client-search" type="search" placeholder="Nome ou e-mail"></label>
+                <label>Filtrar por status<select id="admin-status-filter"><option value="all">Todos os status</option><option value="pending">Aguardando</option><option value="active">Vigentes</option><option value="expired">Vencidos</option><option value="suspended">Suspensos</option></select></label>
+                <p id="admin-visible-count" aria-live="polite"></p>
+            </div>
             <div id="admin-clients-list" class="admin-clients-list">Carregando clientes...</div>
         </section>
     </main>
-    <script src="config.js"></script><script src="classificados-admin.js"></script>
+    <script src="assets/js/config.js"></script><script src="assets/js/classificados-admin.js"></script>
 </body></html>

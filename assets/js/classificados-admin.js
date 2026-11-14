@@ -5,8 +5,17 @@ const ADMIN_CATEGORIAS = {
 const adminLogin = document.getElementById('admin-login-panel');
 const adminDashboard = document.getElementById('admin-dashboard');
 const adminMessage = document.getElementById('admin-message');
+let adminClients = [];
+
+document.getElementById('admin-client-search').addEventListener('input', renderizarClientesAdmin);
+document.getElementById('admin-status-filter').addEventListener('change', renderizarClientesAdmin);
 
 function adminNotice(text, type = 'info') { adminMessage.className = `classified-message ${type}`; adminMessage.textContent = text; }
+function dataHojeSaoPaulo() { return new Intl.DateTimeFormat('sv-SE', { timeZone: 'America/Sao_Paulo' }).format(new Date()); }
+function estadoAtualCliente(client) {
+    return client.status === 'active' && (!client.expires_at || client.expires_at < dataHojeSaoPaulo())
+        ? 'expired' : client.status;
+}
 
 document.getElementById('admin-login-form').addEventListener('submit', async event => {
     event.preventDefault();
@@ -41,18 +50,42 @@ async function carregarClientes() {
         .select('id,user_id,business_name,email,logo_url,status,expires_at,created_at,classified_client_slots(category,slots)')
         .order('created_at', { ascending: false });
     if (error) { container.textContent = `Erro ao carregar clientes: ${error.message}`; return; }
+    adminClients = clients || [];
+    const vigentes = adminClients.filter(client => estadoAtualCliente(client) === 'active').length;
+    document.getElementById('admin-total-count').textContent = adminClients.length;
+    document.getElementById('admin-pending-count').textContent = adminClients.filter(client => client.status === 'pending').length;
+    document.getElementById('admin-active-count').textContent = vigentes;
+    document.getElementById('admin-expired-count').textContent = adminClients.filter(client => estadoAtualCliente(client) === 'expired').length;
+    document.getElementById('admin-suspended-count').textContent = adminClients.filter(client => client.status === 'suspended').length;
+    renderizarClientesAdmin();
+}
+
+function renderizarClientesAdmin() {
+    const container = document.getElementById('admin-clients-list');
+    const query = document.getElementById('admin-client-search').value.trim().toLocaleLowerCase('pt-BR');
+    const status = document.getElementById('admin-status-filter').value;
+    const priority = { pending: 0, expired: 1, active: 2, suspended: 3 };
+    const filtered = adminClients.filter(client =>
+        (status === 'all' || estadoAtualCliente(client) === status) &&
+        (`${client.business_name} ${client.email}`.toLocaleLowerCase('pt-BR').includes(query))
+    ).sort((a, b) => priority[estadoAtualCliente(a)] - priority[estadoAtualCliente(b)] || new Date(b.created_at) - new Date(a.created_at));
+    document.getElementById('admin-visible-count').textContent = `${filtered.length} de ${adminClients.length} clientes`;
     container.replaceChildren();
-    if (!clients?.length) { container.textContent = 'Ainda não há solicitações de cadastro.'; return; }
-    clients.forEach(client => container.appendChild(criarCartaoCliente(client)));
+    if (!adminClients.length) { container.textContent = 'Ainda não há solicitações de cadastro.'; return; }
+    if (!filtered.length) { container.textContent = 'Nenhum cliente corresponde à busca e ao filtro.'; return; }
+    filtered.forEach(client => container.appendChild(criarCartaoCliente(client)));
 }
 
 function criarCartaoCliente(client) {
-    const card = document.createElement('article'); card.className = 'admin-client-card';
+    const currentState = estadoAtualCliente(client);
+    const card = document.createElement('article'); card.className = `admin-client-card status-${currentState}`;
     const heading = document.createElement('div'); heading.className = 'admin-client-heading';
     if (client.logo_url) { const logo = document.createElement('img'); logo.className = 'admin-client-logo'; logo.src = client.logo_url; logo.alt = `Logo de ${client.business_name}`; heading.appendChild(logo); }
     const name = document.createElement('h3'); name.textContent = client.business_name;
     const email = document.createElement('p'); email.textContent = client.email;
-    heading.append(name, email); card.appendChild(heading);
+    const badge = document.createElement('span'); badge.className = `admin-status-badge status-${currentState}`;
+    badge.textContent = currentState === 'pending' ? 'Aguardando' : currentState === 'expired' ? 'Contrato vencido' : currentState === 'active' ? 'Vigente' : 'Suspenso';
+    heading.append(name, email, badge); card.appendChild(heading);
     const fields = document.createElement('div'); fields.className = 'admin-client-fields';
     const businessLabel = document.createElement('label'); businessLabel.textContent = 'Nome do anunciante';
     const businessInput = document.createElement('input'); businessInput.type = 'text'; businessInput.maxLength = 120; businessInput.value = client.business_name;

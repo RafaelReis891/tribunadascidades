@@ -27,6 +27,8 @@ Se o banco já estava configurado, execute `classificados-fotos-logo.sql` no SQL
 
 Para habilitar os filtros estruturados de imóveis, execute `classificados-filtros-imoveis.sql` e depois execute novamente a versão atualizada de `classificados-fotos-logo.sql` para atualizar o gatilho dos anúncios. Anúncios antigos continuam aparecendo; edite-os no painel do anunciante para preencher cidade, bairro, tipo e preço numérico e incluí-los nesses filtros.
 
+Se anúncios continuarem aparecendo depois do vencimento ou suspensão do cliente, execute `classificados-vigencia-anuncios.sql` no SQL Editor e publique os arquivos atualizados do site. A migração atualiza a regra de validade usando a data de São Paulo, recria as políticas de leitura e instala a função usada pelo catálogo. O catálogo sempre verifica status ativo e prazo vigente, inclusive quando um administrador está logado. Os anúncios ficam ocultos, sem apagar os dados; ao renovar o contrato, voltam a aparecer se ainda estiverem publicados.
+
 Para cadastrar motos separadas de carros, execute `classificados-motos-eletricas.sql` no SQL Editor. Depois disso, a categoria Motos Elétricas aparece nos menus e nos limites de vagas dos clientes.
 
 ## Vitrine de comércios e ofertas

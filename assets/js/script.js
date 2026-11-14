@@ -16,7 +16,11 @@ function criarCardNoticia(noticia) {
     meta.textContent = `📅 ${new Date(noticia.published_at).toLocaleDateString('pt-BR')} | ✍️ Tribuna das Cidades`;
     const acao = document.createElement('p');
     acao.className = 'news-teaser';
-    acao.textContent = 'Leia a matéria completa';
+    const linkCompleto = document.createElement('a');
+    linkCompleto.className = 'news-read-more';
+    linkCompleto.href = link.href;
+    linkCompleto.textContent = 'Leia a notícia completa →';
+    acao.appendChild(linkCompleto);
     card.append(categoria, titulo, meta, acao);
     return card;
 }

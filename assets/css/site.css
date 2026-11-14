@@ -168,6 +168,8 @@ main.portal-layout {
 }
 
 .news-teaser { color: var(--cor-texto-claro); font-size: 1rem; }
+.news-read-more { color: var(--cor-destaque); font-size: .92rem; font-weight: 700; }
+.news-read-more:hover { color: #991b1b; text-decoration: underline; }
 .load-more {
     display: block; width: 100%; margin: 10px 0 25px; padding: 13px 18px;
     border: 0; border-radius: 6px; background: var(--cor-primaria); color: #fff;

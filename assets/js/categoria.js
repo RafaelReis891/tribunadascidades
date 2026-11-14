@@ -23,7 +23,11 @@ function montarCard(noticia) {
     meta.textContent = `📅 ${new Date(noticia.published_at).toLocaleDateString('pt-BR')} | ✍️ Tribuna das Cidades`;
     const chamada = document.createElement('p');
     chamada.className = 'news-teaser';
-    chamada.textContent = 'Leia a matéria completa';
+    const linkCompleto = document.createElement('a');
+    linkCompleto.className = 'news-read-more';
+    linkCompleto.href = link.href;
+    linkCompleto.textContent = 'Leia a notícia completa →';
+    chamada.appendChild(linkCompleto);
     card.append(categoria, titulo, meta, chamada);
     return card;
 }
